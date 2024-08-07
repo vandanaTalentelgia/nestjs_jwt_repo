@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports:[
@@ -23,6 +24,14 @@ import { ConfigService } from '@nestjs/config';
     }),
     MongooseModule.forFeature([{ name: "User", schema: UserSchema }])],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService,JwtStrategy],
+  exports: [JwtStrategy,PassportModule]
 })
-export class UserModule {}
+export class UserModule {
+  constructor(private configService: ConfigService) {
+    console.log(configService.get<string>('DATABASE_HOST'))
+    // return this.configService.get<string>('DATABASE_HOST');
+  }
+
+
+}
