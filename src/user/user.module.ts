@@ -15,9 +15,9 @@ import { JwtStrategy } from './jwt.strategy';
       inject:[ConfigService],
       useFactory:(config: ConfigService)=>{
         return {
-          secret: '93489348438hdhh',
+          secret: config.get<string>('JWT_SECRET'),
           signOptions:{
-            expiresIn: '7d',
+            expiresIn:config.get<string>('JWT_EXPIRE'),
           }
         }
       }
@@ -28,10 +28,7 @@ import { JwtStrategy } from './jwt.strategy';
   exports: [JwtStrategy,PassportModule]
 })
 export class UserModule {
-  constructor(private configService: ConfigService) {
-    console.log(configService.get<string>('DATABASE_HOST'))
-    // return this.configService.get<string>('DATABASE_HOST');
+  constructor(){
+    console.log('user module');
   }
-
-
 }

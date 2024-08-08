@@ -6,22 +6,28 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Feature1Module } from './feature1/feature1.module';
+import { Feature2Module } from './feature2/feature2.module';
 @Module({
   imports:[
     JwtModule.registerAsync({
       inject:[ConfigService],
       useFactory:(config: ConfigService)=>{
         return {
-          secret: '93489348438hdhh',
+          secret: config.get<string>('JWT_SECRET'),
           signOptions:{
-            expiresIn: '7d',
+            expiresIn: config.get<string>('JWT_EXPIRE'),
           }
         }
       }
     }),
   UserModule,
-  MongooseModule.forFeature([{ name: "User", schema: AdminSchema }])],
+  MongooseModule.forFeature([{ name: "User", schema: AdminSchema }]), Feature1Module,Feature2Module],
   controllers: [AdminController],
   providers: [AdminService]
 })
-export class AdminModule {}
+export class AdminModule {
+  constructor(){
+    console.log('admin module');
+  }
+}

@@ -10,9 +10,9 @@ import { AdminModule } from './admin/admin.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes the configuration globally available
-      envFilePath: '.development.env', // Ensure the correct path
+      envFilePath: '.env', // Ensure the correct path
    
-  }),MongooseModule.forRoot("mongodb://localhost:27017/userDatabase"),  UserModule,AdminModule],
+  }),MongooseModule.forRoot(process.env.BASE_URL),  UserModule,AdminModule],
   controllers: [AppController],
   providers: [AppService],
 })
