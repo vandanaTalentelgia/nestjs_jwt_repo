@@ -8,6 +8,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Feature1Module } from './feature1/feature1.module';
 import { Feature2Module } from './feature2/feature2.module';
+import { JwtStrategy } from 'src/user/jwt.strategy'; 
+import { PassportModule } from '@nestjs/passport';
 @Module({
   imports:[
     JwtModule.registerAsync({
