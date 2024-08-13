@@ -6,7 +6,7 @@ import { Module } from '@nestjs/common';
   providers: []
 })
 export class Feature2Module {
-  constructor(){
-    console.log('feature 2 sub module of admin');
-  }
+  // constructor(){
+  //   console.log('feature 2 sub module of admin');
+  // }
 }

@@ -18,7 +18,7 @@ async function bootstrap() {
     scheme:'bearer',
     bearerFormat: 'jwt',
     name:'JWT',
-    description:'JWT token required to access admin seaction apis',
+    description:'JWT token required to access admin section apis',
     in:"header"
    }, 'JWT-auth').build();
    const document =SwaggerModule.createDocument(app,options);

@@ -1,18 +1,16 @@
 import { Body, Controller, Delete, Get, Res, HttpException, HttpStatus, Param, Post, Put, Query, UseGuards , UploadedFile,
     UseInterceptors,} from '@nestjs/common';
-import { ParentSchema } from './schemas/feature1.schemas';
 import {Feature1Service  } from './feature1.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Query as ExpressQuery } from 'express-serve-static-core';
 import { ApiBody, ApiConsumes, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { createFolderDto } from './dto/create-folder.dto';
-import { createSubFolderDto } from './dto/create-subfolder.dto';
+import { createModuleDto } from './dto/create-module.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('parents')
+@Controller('module')
 //to add category in the swagger
-@ApiTags('Parent CRUD')
+@ApiTags('Module CRUD')
 // Apply security to all Swagger functions; remove and add before specific functions to secure selectively
 @ApiSecurity('JWT-auth')
 export class Feature1Controller {
@@ -20,51 +18,66 @@ export class Feature1Controller {
 
     @Get("/get")
     @UseGuards(AuthGuard())
-    async getAllFolders(@Query() query: ExpressQuery, @Res() res: Response): Promise<void> {
-        const getAllFolders = await this.feature1Service.findAll(query); // Await the promise
+    async getAllModules(@Query() query: ExpressQuery, @Res() res: Response): Promise<void> {
+        const getAllModules = await this.feature1Service.findAll(query); // Await the promise
     
-        if (getAllFolders) {
+        if (getAllModules) {
             res.json({
                success : true,
                 error : false,
                 message : "Successfully! Record has been fetched",
-                data : getAllFolders,
+                data : getAllModules,
             });
         } else {
             throw new HttpException('Folder Not Found', HttpStatus.NOT_FOUND);
         }
     }
 
-    @Post("/parent-folder/create")
+    @Post("/create")
     @UseGuards(AuthGuard())
-    // @UseInterceptors(FileInterceptor('file'))
-    // @ApiConsumes('multipart/form-data')
-    // @ApiBody({
-    //     description: 'Folder creation data',
-    //     schema: {
-    //       type: 'object',
-    //       properties: {
-    //         name: { type: 'string' },
-    //         file: {type: 'string',
-    //         format: 'binary',},
-    //       },
-    //     },
-    //   })
-    async createFolder(
-        // @UploadedFile() file: Express.Multer.File,
-        @Body()
-        name: createFolderDto,
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        type: createModuleDto,
+        description: 'Folder creation data',
+        schema: {
+          type: 'object',
+          properties: {
+            parent_id: { type: 'string' },
+            name: { type: 'string' },
+            file: {type: 'string',
+            format: 'binary',},
+          },
+        },
+      })
+   
+    async createModule(
+        @UploadedFile() file: Express.Multer.File,
+        @Body() data: createModuleDto,
         @Res() res: Response
     ): Promise<void> {
-        // const { name } = parent;
-        // const fileData = {
-        //     originalName: file.originalname,
-        //     mimetype: file.mimetype,
-        //     buffer: file.buffer,
-        //     size: file.size,
-        //   };
-        // const ParentData = { ...parent,name:name, file: fileData.originalName };
-         const createFolder=await this.feature1Service.create(name);
+        let fileData = {
+            originalName: null,
+            mimetype: null,
+            buffer: null,
+            size: null,
+        };
+    
+        if (file && data.parent_id) {
+            fileData = {
+                originalName: file.originalname,
+                mimetype: file.mimetype,
+                buffer: file.buffer,  // Include buffer if you want to store file content
+                size: file.size,
+            };
+        }
+         // Assuming `name` is a property of `createModuleDto` and it's of type string
+    const ParentData = { 
+        parent_id: data.parent_id?data.parent_id:null,
+        name: data.name,  // Extracting `name` from `createModuleDto`
+        file: file && data.parent_id ?fileData.originalName :null
+    };
+         const createFolder=await this.feature1Service.create(ParentData);
         if(createFolder){
             res.json({
                 success : true,
@@ -119,24 +132,5 @@ export class Feature1Controller {
         }
     }
 
-    @Post("/child-folder/create")
-    @UseGuards(AuthGuard())
-    async createSubFolder(
-        // @UploadedFile() file: Express.Multer.File,
-        @Body()
-        data: createSubFolderDto,
-        @Res() res: Response
-    ): Promise<void> {
-         const createSubFolder=await this.feature1Service.create(data);
-        if(createSubFolder){
-            res.json({
-                success : true,
-                 error : false,
-                 message : "Successfully! Record has been inserted.",
-                 data : createSubFolder,
-             });
-        } else {
-            throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    
 }

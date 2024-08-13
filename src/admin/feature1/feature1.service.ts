@@ -1,20 +1,22 @@
 import * as  mongoose from 'mongoose';
 import { BadRequestException, FileValidator, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Parent } from './schemas/feature1.schemas';
+import { Module } from './schemas/feature1.schemas';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class Feature1Service {
 
-  constructor(@InjectModel(Parent.name)
-  private ParentModel: mongoose.Model<Parent>,
+  constructor(@InjectModel(Module.name)
+  private ModuleModel: mongoose.Model<Module>,
     private jwtService: JwtService
 
   ) { }
 
-  async findAll(query: any): Promise<Parent[]> {
+  async findAll(query: any): Promise<Module[]> {
     try {
-      const folders = await this.ParentModel.find(query).exec();
+      
+      const folders = await this.ModuleModel.find(query).exec();
+      
       return folders;
     } catch (error) {
       return error;
@@ -22,23 +24,24 @@ export class Feature1Service {
   }
 
 
-  async create(folder: Parent): Promise<Parent> {
+  async create(folder: Module): Promise<Module> {
     try {
-      const res = await this.ParentModel.create(folder);
+      const res = await this.ModuleModel.create(folder);
+      console.log(res);
       return res;
     } catch (error) {
       return error;
     }
   }
 
-  async findById(id: string): Promise<Parent> {
+  async findById(id: string): Promise<Module> {
     try {
       const isValidId = mongoose.isValidObjectId(id);
 
       if (!isValidId) {
         throw new BadRequestException('Please enter valid id');
       }
-      const folder = await this.ParentModel.findById(id);
+      const folder = await this.ModuleModel.findById(id);
 
       if (!folder) {
         throw new NotFoundException('folder not found');
@@ -49,18 +52,18 @@ export class Feature1Service {
     }
   }
 
-  async deleteById(id: string): Promise<Parent> {
+  async deleteById(id: string): Promise<Module> {
     try {
       const isValidId = mongoose.isValidObjectId(id);
 
       if (!isValidId) {
         throw new BadRequestException('Please enter valid id');
       }
-      const Parent = await this.ParentModel.findByIdAndDelete(id);
-      if (!Parent) {
-        throw new NotFoundException('Parent not found');
+      const Module = await this.ModuleModel.findByIdAndDelete(id);
+      if (!Module) {
+        throw new NotFoundException('Module not found');
       }
-      return Parent;
+      return Module;
     } catch (error) {
       return error;
     }

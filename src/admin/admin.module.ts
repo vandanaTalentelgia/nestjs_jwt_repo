@@ -29,7 +29,7 @@ import { PassportModule } from '@nestjs/passport';
   providers: [AdminService]
 })
 export class AdminModule {
-  constructor(){
-    console.log('admin module');
-  }
+  // constructor(){
+  //   console.log('admin module');
+  // }
 }

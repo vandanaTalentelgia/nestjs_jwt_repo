@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { Feature1Controller } from './feature1.controller';
 import { Feature1Service } from './feature1.service';
-import {ParentSchema} from './schemas/feature1.schemas'
+import {ModuleSchema} from './schemas/feature1.schemas'
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -20,14 +20,13 @@ import { UserModule } from 'src/user/user.module';
       }
     }
   }),
-  MongooseModule.forFeature([{ name: "Parent", schema: ParentSchema }]),
+  MongooseModule.forFeature([{ name: "Module", schema: ModuleSchema }]),
   UserModule
 ],
   controllers: [Feature1Controller],
   providers: [Feature1Service]
 })
 export class Feature1Module {
-  constructor(){
-    console.log('feature 1 sub module of admin');
-  }
+  // constructor(){
+  // }
 }
