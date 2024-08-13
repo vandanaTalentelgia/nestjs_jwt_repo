@@ -27,7 +27,6 @@ export class Feature1Service {
   async create(folder: Module): Promise<Module> {
     try {
       const res = await this.ModuleModel.create(folder);
-      console.log(res);
       return res;
     } catch (error) {
       return error;

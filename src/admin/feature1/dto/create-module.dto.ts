@@ -4,8 +4,7 @@ import { IsEmail, IsNotEmpty,IsString, ValidateIf, IsOptional} from "class-valid
 //@ApiProperty() is used to show all parameters to swagger
 export class createModuleDto{
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiPropertyOptional()
     @IsString()
     @IsOptional()
     readonly parent_id:string;

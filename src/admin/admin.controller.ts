@@ -16,7 +16,7 @@ import { Response } from 'express';
 export class AdminController {
     constructor(private adminService: AdminService) { }
 
-    @Get("/get")
+    @Get("/get-user")
     @UseGuards(AuthGuard())
     async getAllUsers(@Query() query: ExpressQuery, @Res() res: Response): Promise<void> {
         const getAllUsers = await this.adminService.findAll(query); // Await the promise
@@ -33,7 +33,7 @@ export class AdminController {
         }
     }
 
-    @Post("/create")
+    @Post("/create-user")
     @UseGuards(AuthGuard())
     async createUser(
         @Body()
@@ -53,7 +53,7 @@ export class AdminController {
         }
     }
 
-    @Get('/getById/:id')
+    @Get('/getById-user/:id')
     @UseGuards(AuthGuard())
     async getUserById(
         @Param('id')
@@ -73,7 +73,7 @@ export class AdminController {
         }
     }
 
-    @Put("/update/:id")
+    @Put("/update-user/:id")
     @UseGuards(AuthGuard())
     async updateUser(
         @Param('id')
@@ -95,7 +95,7 @@ export class AdminController {
         }
     }
 
-    @Delete('/delete/:id')
+    @Delete('/delete-user/:id')
     @UseGuards(AuthGuard())
     async deleteUserById(
         @Param('id')
