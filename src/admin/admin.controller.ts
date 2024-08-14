@@ -8,7 +8,7 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 
-@Controller('admins')
+@Controller('admin')
 //to add category in the swagger
 @ApiTags('Admin CRUD')
 // Apply security to all Swagger functions; remove and add before specific functions to secure selectively
@@ -16,7 +16,7 @@ import { Response } from 'express';
 export class AdminController {
     constructor(private adminService: AdminService) { }
 
-    @Get("/get-user")
+    @Get("/users")
     @UseGuards(AuthGuard())
     async getAllUsers(@Query() query: ExpressQuery, @Res() res: Response): Promise<void> {
         const getAllUsers = await this.adminService.findAll(query); // Await the promise
@@ -33,7 +33,7 @@ export class AdminController {
         }
     }
 
-    @Post("/create-user")
+    @Post("/users")
     @UseGuards(AuthGuard())
     async createUser(
         @Body()
@@ -53,14 +53,14 @@ export class AdminController {
         }
     }
 
-    @Get('/getById-user/:id')
+    @Get('/users/:userId')
     @UseGuards(AuthGuard())
     async getUserById(
-        @Param('id')
-        id: string,
+        @Param('userId')
+        userId: string,
          @Res() res: Response
     ): Promise<void> {
-        const getUserById = await this.adminService.findById(id);
+        const getUserById = await this.adminService.findById(userId);
         if (getUserById) {
             res.json({
                 success : true,
@@ -73,16 +73,16 @@ export class AdminController {
         }
     }
 
-    @Put("/update-user/:id")
+    @Put("/users/:userId")
     @UseGuards(AuthGuard())
     async updateUser(
-        @Param('id')
-        id: string,
+        @Param('userId')
+        userId: string,
         @Body()
         Admin: updateUserDto,
         @Res() res: Response
     ): Promise<void> {
-        const updateUser=  await this.adminService.updateById(id, Admin);
+        const updateUser=  await this.adminService.updateById(userId, Admin);
         if(updateUser){
             res.json({
                 success : true,
@@ -95,14 +95,14 @@ export class AdminController {
         }
     }
 
-    @Delete('/delete-user/:id')
+    @Delete('/users/:userId')
     @UseGuards(AuthGuard())
     async deleteUserById(
-        @Param('id')
-        id: string,
+        @Param('userId')
+        userId: string,
         @Res() res: Response
     ): Promise<void> {
-        const deleteUserById=await this.adminService.deleteById(id);
+        const deleteUserById=await this.adminService.deleteById(userId);
 
         if(deleteUserById){
             res.json({

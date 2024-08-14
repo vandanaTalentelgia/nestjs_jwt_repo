@@ -8,7 +8,7 @@ import { Response } from 'express';
 import { createModuleDto } from './dto/create-module.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-@Controller('module')
+@Controller('modules')
 //to add category in the swagger
 @ApiTags('Module CRUD')
 // Apply security to all Swagger functions; remove and add before specific functions to secure selectively
@@ -16,7 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class Feature1Controller {
     constructor(private feature1Service: Feature1Service) { }
 
-    @Get("/get")
+    @Get("")
     @UseGuards(AuthGuard())
     async getAllModules(@Query() query: ExpressQuery, @Res() res: Response): Promise<void> {
         const getAllModules = await this.feature1Service.findAll(query); // Await the promise
@@ -33,7 +33,7 @@ export class Feature1Controller {
         }
     }
 
-    @Post("/create")
+    @Post("")
     @UseGuards(AuthGuard())
     @UseInterceptors(FileInterceptor('file'))
     @ApiConsumes('multipart/form-data')
@@ -90,14 +90,14 @@ export class Feature1Controller {
         }
     }
 
-    @Get('/getById/:id')
+    @Get('/:moduleId')
     @UseGuards(AuthGuard())
     async getFolderById(
-        @Param('id')
-        id: string,
+        @Param('moduleId')
+        moduleId: string,
          @Res() res: Response
     ): Promise<void> {
-        const getFolderById = await this.feature1Service.findById(id);
+        const getFolderById = await this.feature1Service.findById(moduleId);
         if (getFolderById) {
             res.json({
                 success : true,
@@ -111,14 +111,14 @@ export class Feature1Controller {
     }
 
 
-    @Delete('/delete/:id')
+    @Delete('/:moduleId')
     @UseGuards(AuthGuard())
     async deleteFolderById(
-        @Param('id')
-        id: string,
+        @Param('moduleId')
+        moduleId: string,
         @Res() res: Response
     ): Promise<void> {
-        const deleteFolderById=await this.feature1Service.deleteById(id);
+        const deleteFolderById=await this.feature1Service.deleteById(moduleId);
 
         if(deleteFolderById){
             res.json({
